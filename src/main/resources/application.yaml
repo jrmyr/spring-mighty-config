@@ -1,0 +1,28 @@
+# SPRING APPLICATION SETTINGS
+spring:
+  main:
+    web-application-type: "none"
+  banner:
+    location: classpath:banner.txt
+
+# APP SETTINGS
+config:
+  web-page:
+    ico-path:
+      standard: "shop.ico"
+    url-path:
+      standard: "/not-found"
+      bikes: "/bikes"
+      parts: "/parts"
+      clothes: "/clothes"
+  order:
+    shipping-cost:
+      standard: 4.90
+      bikes: 19.90
+    free-shipping-limit:
+      standard: 100.0
+      bikes: 2000.0
+    default-shipping-company:
+      standard: "YEL"
+      bikes: "Blue-Corp."
+      clothes: "Packy"
