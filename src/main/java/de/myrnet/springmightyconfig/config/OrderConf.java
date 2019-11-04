@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 @ToString
 //@Builder(toBuilder = true)
 @AllArgsConstructor
-public class ConfOrder {
+public class OrderConf {
 
     public static final String SHIPPING_COST = "shipping-cost";
     public static final String FREE_SHIPPING_LIMIT = "free-shipping-limit";
@@ -25,7 +25,7 @@ public class ConfOrder {
     @Getter(value = AccessLevel.PUBLIC)
     private Map<String, Supplier<ConfigValue<?>>> values;
 
-    public ConfOrder() {
+    public OrderConf() {
         values = Map.of(
                 SHIPPING_COST, this::getShippingCost,
                 FREE_SHIPPING_LIMIT, this::getFreeShippingLimit,

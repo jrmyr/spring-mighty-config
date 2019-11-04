@@ -17,14 +17,20 @@ class ApiUserConfigValuesTest {
 
     @Test
     void getValue_allTypes() {
-        ConfigValue<String> configValue = defaultConfig.getOrder().getDefaultShippingCompany();
+        ConfigValue<String> webPageConfUrlPath = defaultConfig.getWebPageConf().getUrlPath();
+        ConfigValue<String> orderConfShiping = defaultConfig.getOrderConf().getDefaultShippingCompany();
         Assertions.assertAll(
                 // Positive tests
-                () -> assertEquals("Blue-Corp.", extractValue(BIKES, configValue),   "bikes type"),
-                () -> assertEquals("YEL",        extractValue(PARTS, configValue),   "parts type"),
-                () -> assertEquals("Packy",      extractValue(CLOTHES, configValue), "clothes type"),
+                () -> assertEquals("/parts",    extractValue(PARTS,   webPageConfUrlPath), "URL parts"),
+                () -> assertEquals("/clothes",  extractValue(CLOTHES, webPageConfUrlPath), "URL clothes"),
+                () -> assertEquals("Blue-Corp.", extractValue(BIKES,   orderConfShiping), "bikes type"),
+                () -> assertEquals("YEL",        extractValue(PARTS,   orderConfShiping), "parts type"),
+                () -> assertEquals("Packy",      extractValue(CLOTHES, orderConfShiping), "clothes type"),
                 // Negative tests
-                () -> assertThrows(IllegalArgumentException.class, () -> extractValue(unsupported, configValue), "error")
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> extractValue(unsupported, orderConfShiping), "order conf error"),
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> extractValue(unsupported, webPageConfUrlPath), "web page conf error")
         );
     }
 

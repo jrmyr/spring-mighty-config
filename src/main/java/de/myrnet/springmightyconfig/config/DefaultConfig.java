@@ -1,5 +1,6 @@
 package de.myrnet.springmightyconfig.config;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,9 +23,11 @@ public class DefaultConfig {
         unsupported,
         ;
     }
+    @JsonProperty("web-page")
+    private WebPageConf webPageConf;
 
-    private ConfWebPage webPage;
-    private ConfOrder order;
+    @JsonProperty("order")
+    private OrderConf orderConf;
 
 //    public AppliedConfig getConfigWithDefaults() {
 //        AppliedConfig ac = new AppliedConfig(

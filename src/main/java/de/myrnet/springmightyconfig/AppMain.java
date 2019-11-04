@@ -16,9 +16,9 @@ public class AppMain implements CommandLineRunner {
 		SpringApplication.run(AppMain.class, args);
 	}
 
-	public void run(String[] params) throws Exception {
-		System.out.println("Config web-page:  " + defaultConfig.getWebPage());
-		System.out.println("Config order   :  " + defaultConfig.getOrder());
+	public void run(String[] params) {
+		System.out.println("Config web-page:  " + defaultConfig.getWebPageConf());
+		System.out.println("Config order   :  " + defaultConfig.getOrderConf());
 	}
 
 }
