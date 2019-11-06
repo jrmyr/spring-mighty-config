@@ -13,6 +13,12 @@ import org.springframework.stereotype.Component;
 @ToString
 public class ConfigValue<T> implements Cloneable {
 
+//    public static <T> ConfigValue create(T standard) {
+//        var cv = new ConfigValue<>();
+//        cv.setStandard(standard);
+//        return cv;
+//    }
+
     @NonNull
     private T standard;
 

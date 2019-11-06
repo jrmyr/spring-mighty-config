@@ -22,7 +22,11 @@ public class OrderConf {
     public static final String FREE_SHIPPING_LIMIT = "free-shipping-limit";
     public static final String DEFAULT_SHIPPING_COMPANY = "default-shipping-company";
 
-    @Getter(value = AccessLevel.PUBLIC)
+    private ConfigValue<BigDecimal> shippingCost;
+    private ConfigValue<BigDecimal> freeShippingLimit;
+    private ConfigValue<String> defaultShippingCompany;
+
+    @Getter(value = AccessLevel.PACKAGE)
     private Map<String, Supplier<ConfigValue<?>>> values;
 
     public OrderConf() {
@@ -32,14 +36,5 @@ public class OrderConf {
                 DEFAULT_SHIPPING_COMPANY, this::getDefaultShippingCompany
         );
     }
-
-    @PostConstruct
-    public void initCheck() {
-        System.out.println("Initialized? - " + values.get(SHIPPING_COST).get());
-    }
-
-    private ConfigValue<BigDecimal> shippingCost;
-    private ConfigValue<BigDecimal> freeShippingLimit;
-    private ConfigValue<String> defaultShippingCompany;
 
 }

@@ -20,7 +20,10 @@ public class WebPageConf {
     public static final String ICO_PATH = "ico-path";
     public static final String URL_PATH = "url-path";
 
-    @Getter(value = AccessLevel.PUBLIC)
+    private ConfigValue<String> icoPath;
+    private ConfigValue<String> urlPath;
+
+    @Getter(value = AccessLevel.PACKAGE)
     private Map<String, Supplier<ConfigValue<?>>> values;
 
     public WebPageConf() {
@@ -29,13 +32,5 @@ public class WebPageConf {
                 URL_PATH, this::getUrlPath
         );
     }
-
-    @PostConstruct
-    public void initCheck() {
-        System.out.println("Initialized? - " + values.get(ICO_PATH).get());
-    }
-
-    private ConfigValue<String> icoPath;
-    private ConfigValue<String> urlPath;
 
 }

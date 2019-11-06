@@ -5,12 +5,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static de.myrnet.springmightyconfig.config.DefaultConfig.Type.*;
+import java.math.BigDecimal;
+import java.util.Map;
+
+import static de.myrnet.springmightyconfig.config.DefaultConfig.ProductType.*;
 import static de.myrnet.springmightyconfig.config.DefaultConfig.extractValue;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class ApiUserConfigValuesTest {
+class ConfigTest_Collective {
 
     @Autowired
     private DefaultConfig defaultConfig;
@@ -31,6 +34,27 @@ class ApiUserConfigValuesTest {
                         () -> extractValue(unsupported, orderConfShiping), "order conf error"),
                 () -> assertThrows(IllegalArgumentException.class,
                         () -> extractValue(unsupported, webPageConfUrlPath), "web page conf error")
+        );
+    }
+
+    @Test
+    void overwrites() {
+        var fifty = new BigDecimal("50.0");
+        var icoString = "shop-v2.ico";
+        var overwrites = Map.<String, Object>of(
+                "ico-path", icoString,
+                "shipping-cost", fifty
+        );
+
+        AppliedConfig appliedConfig = defaultConfig.getWithOverwrites(BIKES, overwrites);
+
+        Assertions.assertAll(
+                () -> assertEquals(fifty, appliedConfig.getShippingCost()),
+                () -> assertEquals(icoString, appliedConfig.getIcoPath()),
+                () -> assertThrows(
+                        IllegalArgumentException.class,
+                        () -> defaultConfig.getWithOverwrites(BIKES, Map.of("order.shipping-cost", fifty)),
+                        "Non-existing property")
         );
     }
 
