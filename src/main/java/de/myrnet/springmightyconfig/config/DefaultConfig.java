@@ -1,6 +1,7 @@
 package de.myrnet.springmightyconfig.config;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import de.myrnet.springmightyconfig.config.groups.Order;
+import de.myrnet.springmightyconfig.config.groups.WebPage;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,8 +9,12 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Internal (package-wide) representation retaining the config's grouping (to be checked if really needed/wanted)
@@ -20,54 +25,48 @@ import java.util.Objects;
 @AllArgsConstructor(access = AccessLevel.PACKAGE, onConstructor_ = {@Autowired})
 public class DefaultConfig {
 
-    enum ProductType {
+    public enum ProductType {
         BIKES,
         PARTS,
         CLOTHES,
         unsupported,
         ;
-    }
 
-    @JsonProperty("web-page")
-    private WebPageConf webPageConf;
-
-    @JsonProperty("order")
-    private OrderConf orderConf;
-
-    public AppliedConfig getWithOverwrites(ProductType productType, Map<String, Object> overwrites) {
-        AppliedConfig ac = getAppliedConfigWithDefaults(productType);
-        return overWriteValues(ac, overwrites);
-    }
-
-    private AppliedConfig getAppliedConfigWithDefaults(ProductType productType) {
-        AppliedConfig ac = AppliedConfig.builder()
-                .productType(productType)
-                .icoPath(extractValue(productType, webPageConf.getIcoPath()))
-                .urlPath(extractValue(productType, webPageConf.getUrlPath()))
-                .shippingCost(extractValue(productType, orderConf.getShippingCost()))
-                .freeShippingLimit(extractValue(productType, orderConf.getFreeShippingLimit()))
-                .defaultShippingCompany(extractValue(productType, orderConf.getDefaultShippingCompany()))
-                .build();
-        ac.setValues();
-        return ac;
-    }
-
-    private AppliedConfig overWriteValues(AppliedConfig appliedConfig, Map<String, Object> overwrites)  {
-        overwrites.forEach( (k, v) -> {
-            appliedConfig.setByPropName(k, v);
-        });
-        return appliedConfig;
-    }
-
-    static <T> T extractValue(ProductType productType, ConfigValue<T> configValue) {
-        T value;
-        switch (productType) {
-            case BIKES  : value = configValue.getBikes();   break;
-            case PARTS  : value = configValue.getParts();   break;
-            case CLOTHES: value = configValue.getClothes(); break;
-            default: throw new IllegalArgumentException("The type '" + productType + "' is unknown");
+        public <T> T extractValue(ConfigValue<T> configValue) {
+            Optional<T> value;
+            switch (this) {
+                case BIKES  : value = configValue.getBikes(); break;
+                case PARTS  : value = configValue.getParts(); break;
+                case CLOTHES: value = configValue.getClothes(); break;
+                default: throw new IllegalArgumentException("The type '" + this + "' is unknown");
+            }
+            return value.orElse(configValue.getStandard());
         }
-        return Objects.requireNonNullElse(value, configValue.getStandard());
+
+    }
+
+    //@JsonProperty("web-page")
+    private WebPage webPage;
+
+    //@JsonProperty("order")
+    private Order order;
+
+    public AppliedConfig getWithOverrides(ProductType productType, Map<String, String> overrides) {
+        AppliedConfig ac = new AppliedConfig(productType);
+
+        Set<String> props = Stream.of(order.getAvailableConfigKeys(), webPage.getAvailableConfigKeys())
+                .flatMap(Collection::stream)
+                .collect(Collectors.toSet());
+
+        System.out.println(props);
+
+        ac = order.fillAppliedConfigBuilder(ac);
+        ac = order.overrideValues(ac, overrides);
+
+        ac = webPage.fillAppliedConfigBuilder(ac);
+        ac = webPage.overrideValues(ac, overrides);
+
+        return ac;
     }
 
 }
