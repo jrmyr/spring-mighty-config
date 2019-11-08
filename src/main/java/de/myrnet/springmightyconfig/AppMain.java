@@ -17,8 +17,8 @@ public class AppMain implements CommandLineRunner {
 	}
 
 	public void run(String[] params) {
-		System.out.println("Config web-page:  " + defaultConfig.getWebPage());
-		System.out.println("Config order   :  " + defaultConfig.getOrder());
+		System.out.println("Config web-page:  " + defaultConfig.getWebPageGroup());
+		System.out.println("Config order   :  " + defaultConfig.getOrderGroup());
 	}
 
 }

@@ -15,9 +15,11 @@ public class AppliedConfig {
 
     private DefaultConfig.ProductType productType;
 
+    // Order config group
     private String icoPath;
     private String urlPath;
 
+    // WebPage config group
     private BigDecimal shippingCost;
     private BigDecimal freeShippingLimit;
     private String defaultShippingCompany;

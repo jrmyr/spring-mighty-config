@@ -1,7 +1,8 @@
 package de.myrnet.springmightyconfig.config;
 
-import de.myrnet.springmightyconfig.config.groups.Order;
-import de.myrnet.springmightyconfig.config.groups.WebPage;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import de.myrnet.springmightyconfig.config.groups.OrderGroup;
+import de.myrnet.springmightyconfig.config.groups.WebPageGroup;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,40 +32,28 @@ public class DefaultConfig {
         CLOTHES,
         unsupported,
         ;
-
-        public <T> T extractValue(ConfigValue<T> configValue) {
-            Optional<T> value;
-            switch (this) {
-                case BIKES  : value = configValue.getBikes(); break;
-                case PARTS  : value = configValue.getParts(); break;
-                case CLOTHES: value = configValue.getClothes(); break;
-                default: throw new IllegalArgumentException("The type '" + this + "' is unknown");
-            }
-            return value.orElse(configValue.getStandard());
-        }
-
     }
 
-    //@JsonProperty("web-page")
-    private WebPage webPage;
+    @JsonProperty("web-page")
+    private WebPageGroup webPageGroup;
 
-    //@JsonProperty("order")
-    private Order order;
+    @JsonProperty("order")
+    private OrderGroup orderGroup;
 
     public AppliedConfig getWithOverrides(ProductType productType, Map<String, String> overrides) {
         AppliedConfig ac = new AppliedConfig(productType);
 
-        Set<String> props = Stream.of(order.getAvailableConfigKeys(), webPage.getAvailableConfigKeys())
+        Set<String> props = Stream.of(orderGroup.getAvailableConfigKeys(), webPageGroup.getAvailableConfigKeys())
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
 
         System.out.println(props);
 
-        ac = order.fillAppliedConfigBuilder(ac);
-        ac = order.overrideValues(ac, overrides);
+        ac = orderGroup.fillAppliedConfigBuilder(ac);
+        ac = orderGroup.overrideValues(ac, overrides);
 
-        ac = webPage.fillAppliedConfigBuilder(ac);
-        ac = webPage.overrideValues(ac, overrides);
+        ac = webPageGroup.fillAppliedConfigBuilder(ac);
+        ac = webPageGroup.overrideValues(ac, overrides);
 
         return ac;
     }
