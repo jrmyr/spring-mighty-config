@@ -17,6 +17,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toMap;
+
 /**
  * Internal (package-wide) representation retaining the config's grouping (to be checked if really needed/wanted)
  */
@@ -40,8 +42,19 @@ public class DefaultConfig {
     @JsonProperty("order")
     private OrderGroup orderGroup;
 
-    public AppliedConfig getWithOverrides(ProductType productType, Map<String, String> overrides) {
+    public AppliedConfig get(ProductType productType) {
         AppliedConfig ac = new AppliedConfig(productType);
+        ac = orderGroup.fillAppliedConfigBuilder(ac);
+        ac = webPageGroup.fillAppliedConfigBuilder(ac);
+        return ac;
+    }
+
+    public static Map<String, String> transformMapValues(Map<String, String[]> map) {
+        return map.entrySet().stream().collect(toMap(Map.Entry::getKey, e -> String.join(",", e.getValue())));
+    }
+
+    public AppliedConfig getWithOverrides(ProductType productType, Map<String, String> overrides) {
+        AppliedConfig ac = get(productType);
 
         Set<String> props = Stream.of(orderGroup.getAvailableConfigKeys(), webPageGroup.getAvailableConfigKeys())
                 .flatMap(Collection::stream)
@@ -49,10 +62,7 @@ public class DefaultConfig {
 
         System.out.println(props);
 
-        ac = orderGroup.fillAppliedConfigBuilder(ac);
         ac = orderGroup.overrideValues(ac, overrides);
-
-        ac = webPageGroup.fillAppliedConfigBuilder(ac);
         ac = webPageGroup.overrideValues(ac, overrides);
 
         return ac;

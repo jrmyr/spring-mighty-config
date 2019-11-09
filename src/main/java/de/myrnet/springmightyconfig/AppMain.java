@@ -7,18 +7,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AppMain implements CommandLineRunner {
+public class AppMain {
 
 	@Autowired
 	private DefaultConfig defaultConfig;
 
 	public static void main(String[] args) {
 		SpringApplication.run(AppMain.class, args);
-	}
-
-	public void run(String[] params) {
-		System.out.println("Config web-page:  " + defaultConfig.getWebPageGroup());
-		System.out.println("Config order   :  " + defaultConfig.getOrderGroup());
 	}
 
 }

@@ -1,7 +1,7 @@
 # SPRING APPLICATION SETTINGS
 spring:
-  main:
-    web-application-type: "none"
+#  main:
+#    web-application-type: "none"
   banner:
     location: classpath:banner.txt
 

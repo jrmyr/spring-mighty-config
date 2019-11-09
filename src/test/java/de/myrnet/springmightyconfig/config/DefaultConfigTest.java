@@ -18,7 +18,7 @@ class DefaultConfigTest {
     private DefaultConfig defaultConfig;
 
     @Test
-    void overrides() {
+    void getWithOverrides() {
         var fiftyString = "50.0";
         var newIcoString = "shop-v2.ico";
         var overrides = Map.of(

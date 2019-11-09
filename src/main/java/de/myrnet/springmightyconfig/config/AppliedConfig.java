@@ -1,5 +1,7 @@
 package de.myrnet.springmightyconfig.config;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -11,6 +13,7 @@ import java.math.BigDecimal;
 @Setter(value = AccessLevel.PRIVATE)
 @Builder(toBuilder = true)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
 public class AppliedConfig {
 
     private DefaultConfig.ProductType productType;
