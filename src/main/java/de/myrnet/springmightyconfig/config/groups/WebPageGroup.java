@@ -13,7 +13,6 @@ import java.util.function.Function;
 @Configuration
 @ConfigurationProperties(ignoreUnknownFields = false, prefix = "config.web-page")
 @Setter(value = AccessLevel.PACKAGE)
-@Getter(value = AccessLevel.PACKAGE)
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class WebPageGroup extends AbstractConfigGroup {
 

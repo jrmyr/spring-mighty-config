@@ -23,8 +23,8 @@ import static java.util.stream.Collectors.toMap;
  * Internal (package-wide) representation retaining the config's grouping (to be checked if really needed/wanted)
  */
 @Component
-@Setter
-@Getter
+@Setter(value = AccessLevel.PACKAGE)
+@Getter(value = AccessLevel.PACKAGE)
 @AllArgsConstructor(access = AccessLevel.PACKAGE, onConstructor_ = {@Autowired})
 public class DefaultConfig {
 

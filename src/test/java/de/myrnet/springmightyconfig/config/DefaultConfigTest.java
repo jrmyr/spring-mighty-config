@@ -8,14 +8,35 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.math.BigDecimal;
 import java.util.Map;
 
-import static de.myrnet.springmightyconfig.config.DefaultConfig.ProductType.BIKES;
+import static de.myrnet.springmightyconfig.config.DefaultConfig.ProductType.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class DefaultConfigTest {
 
     @Autowired
     private DefaultConfig defaultConfig;
+
+    @Test
+    void get() {
+        AppliedConfig acBikes = defaultConfig.get(BIKES);
+        Assertions.assertAll(
+                // Positive tests
+                () -> assertEquals("Blue-Corp.", defaultConfig.get(BIKES).getDefaultShippingCompany(),   "bikes type"),
+                () -> assertEquals("YEL",        defaultConfig.get(PARTS).getDefaultShippingCompany(),   "parts type"),
+                () -> assertEquals("Packy",      defaultConfig.get(CLOTHES).getDefaultShippingCompany(), "clothes type"),
+                // Negative tests
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> defaultConfig.get(unsupported), "unsupported product type"),
+                // Positive tests
+                () -> assertEquals("/parts",     defaultConfig.get(PARTS).getUrlPath(),   "URL parts"),
+                () -> assertEquals("/clothes",   defaultConfig.get(CLOTHES).getUrlPath(), "URL clothes"),
+                // Negative tests
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> defaultConfig.get(unsupported), "unsupported product type")
+        );
+    }
 
     @Test
     void getWithOverrides() {
