@@ -19,20 +19,20 @@ class DefaultConfigTest {
     private DefaultConfig defaultConfig;
 
     @Test
-    void get() {
-        AppliedConfig acBikes = defaultConfig.get(BIKES);
+    void get_ok() {
         Assertions.assertAll(
-                // Positive tests
                 () -> assertEquals("Blue-Corp.", defaultConfig.get(BIKES).getDefaultShippingCompany(),   "bikes type"),
                 () -> assertEquals("YEL",        defaultConfig.get(PARTS).getDefaultShippingCompany(),   "parts type"),
                 () -> assertEquals("Packy",      defaultConfig.get(CLOTHES).getDefaultShippingCompany(), "clothes type"),
-                // Negative tests
-                () -> assertThrows(IllegalArgumentException.class,
-                        () -> defaultConfig.get(unsupported), "unsupported product type"),
-                // Positive tests
-                () -> assertEquals("/parts",     defaultConfig.get(PARTS).getUrlPath(),   "URL parts"),
-                () -> assertEquals("/clothes",   defaultConfig.get(CLOTHES).getUrlPath(), "URL clothes"),
-                // Negative tests
+
+                () -> assertEquals("/parts",   defaultConfig.get(PARTS).getUrlPath(),   "URL parts"),
+                () -> assertEquals("/clothes", defaultConfig.get(CLOTHES).getUrlPath(), "URL clothes")
+        );
+    }
+
+    @Test
+    void get_fail() {
+        Assertions.assertAll(
                 () -> assertThrows(IllegalArgumentException.class,
                         () -> defaultConfig.get(unsupported), "unsupported product type")
         );
